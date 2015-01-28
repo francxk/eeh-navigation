@@ -8,7 +8,7 @@ var MenuItem = function (config) {
 MenuItem.prototype.children = function () {
     var children = [];
     angular.forEach(this, function (property) {
-        if (angular.isObject(property)) {
+        if (angular.isObject(property) && property instanceof MenuItem) {
             children.push(property);
         }
     });
@@ -16,15 +16,22 @@ MenuItem.prototype.children = function () {
 };
 
 MenuItem.prototype.hasChildren = function () {
-    for (var key in this) {
-        if (this.hasOwnProperty(key) && angular.isObject(this[key])) {
-            return true;
-        }
-    }
-    return false;
+    return this.children().length > 0;
 };
 
 MenuItem.prototype._isVisible = function () {
+    var hasVisibleChildren = this.children().filter(function (child) {
+        return child._isVisible() !== false;
+    }).length > 0;
+
+    if (!hasVisibleChildren &&
+        angular.isUndefined(this.state) &&
+        angular.isUndefined(this.href) &&
+        angular.isUndefined(this.click) &&
+        !this.isDivider) {
+        return false;
+    }
+
     if (angular.isFunction(this.isVisible)) {
         return this.isVisible();
     }

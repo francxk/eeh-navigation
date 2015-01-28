@@ -1,4 +1,16 @@
-673c802 (HEAD, origin/master, origin/HEAD, master) Add active class to navbar menu items with state
+b69cf35 (HEAD, master) Throw an exception if non-existing menu item is accessed
+cf2e9a9 (tag: 2.7.3, origin/master, origin/HEAD) Prepare for release
+5d38dd1 Fix refactor
+b83937e Small refactor
+ba115d9 Make navbar toggle 'active' when a child is 'active'
+9044bcf (tag: 2.7.2) Prepare for release
+676c666 Refactor
+1efe667 (tag: 2.7.1) Prepare for release
+2659c6d Fix jsHint issue
+e5da9e0 Hide parent navbar items that do not have visible children
+da69951 Loosen dep requirements
+63bf0e0 (tag: 2.7.0) Prepare for release
+673c802 Add active class to navbar menu items with state
 419849d (tag: 2.6.0) Prepare for release
 334ad9c Pull heavy navbar items to the right, and light navbar items to the left.
 0fb3a10 Add css map

@@ -50,6 +50,17 @@ function ($stateProvider, $translateProvider, $urlRouterProvider, eehNavigationP
         });
 
     eehNavigationProvider
+        .navbarMenuItem('hiddenChildren', {
+            text: 'Hidden Children'
+        })
+        .navbarMenuItem('hiddenChildren.hiddenChildren', {
+            text: 'Hidden Child',
+            visible: false
+        })
+        .navbarMenuItem('hiddenChildren.anotherHiddenChildren', {
+            text: 'Another Hidden Child',
+            visible: false
+        })
         .navbarMenuItem('user', {
             text: 'me',
             iconClass: 'fa-user'
@@ -57,11 +68,6 @@ function ($stateProvider, $translateProvider, $urlRouterProvider, eehNavigationP
         .navbarMenuItem('user.blank', {
             text: 'Blank',
             state: 'demo.authenticated.blank'
-        })
-        .navbarMenuItem('user.profile', {
-            text: 'User Profile',
-            iconClass: 'fa-user',
-            state: 'demo.authenticated.home'
         })
         .navbarMenuItem('user.example-com', {
             text: 'example.com',

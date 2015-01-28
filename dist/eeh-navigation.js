@@ -107,6 +107,21 @@
         };
     };
     angular.module("eehNavigation").directive("eehNavigation", [ "$window", "eehNavigation", NavigationDirective ]);
+    var ActiveParentMenuItemDirective = function($location) {
+        return {
+            restrict: "A",
+            link: function(scope, element) {
+                var parent = element.parent().parent().prev();
+                var activeClass = "active";
+                scope.$watch(function() {
+                    return $location.url();
+                }, function() {
+                    parent.toggleClass(activeClass, element.hasClass(activeClass));
+                });
+            }
+        };
+    };
+    angular.module("eehNavigation").directive("eehActiveParentMenuItem", ActiveParentMenuItemDirective);
     "use strict";
     var MenuItem = function(config) {
         this.weight = 0;
@@ -115,21 +130,22 @@
     MenuItem.prototype.children = function() {
         var children = [];
         angular.forEach(this, function(property) {
-            if (angular.isObject(property)) {
+            if (angular.isObject(property) && property instanceof MenuItem) {
                 children.push(property);
             }
         });
         return children;
     };
     MenuItem.prototype.hasChildren = function() {
-        for (var key in this) {
-            if (this.hasOwnProperty(key) && angular.isObject(this[key])) {
-                return true;
-            }
-        }
-        return false;
+        return this.children().length > 0;
     };
     MenuItem.prototype._isVisible = function() {
+        var hasVisibleChildren = this.children().filter(function(child) {
+            return child._isVisible() !== false;
+        }).length > 0;
+        if (!hasVisibleChildren && angular.isUndefined(this.state) && angular.isUndefined(this.href) && angular.isUndefined(this.click) && !this.isDivider) {
+            return false;
+        }
         if (angular.isFunction(this.isVisible)) {
             return this.isVisible();
         }
@@ -215,6 +231,9 @@
     };
     NavigationService.prototype.sidebarMenuItem = function(name, config) {
         if (angular.isUndefined(config)) {
+            if (angular.isUndefined(this._sidebarMenuItems[name])) {
+                throw name + " is not a sidebar menu item";
+            }
             return this._sidebarMenuItems[name];
         }
         this._sidebarMenuItems[name] = new MenuItem(config);
@@ -230,6 +249,9 @@
     };
     NavigationService.prototype.navbarMenuItem = function(name, config) {
         if (angular.isUndefined(config)) {
+            if (angular.isUndefined(this._navbarMenuItems[name])) {
+                throw name + " is not a navbar menu item";
+            }
             return this._navbarMenuItems[name];
         }
         this._navbarMenuItems[name] = new MenuItem(config);
